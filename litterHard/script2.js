@@ -15,39 +15,38 @@ let currentUser = 'X';
 
 // Function to create and render board cells
 function createBoardCells() {
-
-    cells.forEach((_, index) => {
+    // Create cell elements
+    let cellElements = cells.map((_, index) => {
         const cell = document.createElement('div');
-        cell.setAttribute('class', 'board_btn'); 
-        cell.dataset.id = index; 
+        cell.classList.add('board_btn'); // Use classList.add for better readability
+        cell.dataset.id = index; // Store index in dataset
 
         // Add event listener to each cell
-        cell.addEventListener('click', handleClick);
+        cell.addEventListener('click', handleClick); // Correct event type
 
-        // Append cell to the board
-        board.appendChild(cell);
+        return cell; // Return the cell element
     });
+
+    cellElements.forEach(cell => board.appendChild(cell)); // Append each cell to the board
 }
 
 // Event handler function
 function handleClick(event) {
     const cell = event.target;
-    const cellIndex = cell.dataset.id; 
+    const cellIndex = cell.dataset.id;
 
-    // if (cell.innerHTML === '' && !checkWinner()) {
-    if (cell.innerHTML === '') {
-        cell.innerHTML = currentUser; // Set the cell content
+    if (cell.innerHTML === '' && !checkWinner()) {
+        cell.innerHTML = currentUser;
         cells[cellIndex] = currentUser; // Update cells array
-
-        // Check for winner or draw
-        if (checkWinner()) {
-            alert(`${currentUser} wins!`);
-        } else if (cells.every(cell => cell !== null)) {
-            alert('It\'s a draw!');
-        }
 
         // Switch user turn
         currentUser = currentUser === 'X' ? 'O' : 'X';
+
+        if (checkWinner()) {
+            alert(`${currentUser === 'X' ? 'O' : 'X'} wins!`);
+        } else if (cells.every(cell => cell !== null)) {
+            alert('It\'s a draw!');
+        }
     }
 }
 
@@ -55,7 +54,7 @@ function handleClick(event) {
 function checkWinner() {
     return winnerPatterns.some(pattern => {
         const [a, b, c] = pattern;
-        return cells[a] !== null && cells[a] === cells[b] && cells[a] === cells[c];
+        return cells[a] && cells[a] === cells[b] && cells[a] === cells[c];
     });
 }
 
